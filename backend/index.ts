@@ -1,4 +1,7 @@
+import { config } from 'dotenv';
 import Fastify from 'fastify';
+
+config();
 
 const fastify = Fastify({
   logger: {
@@ -6,7 +9,8 @@ const fastify = Fastify({
       target: 'pino-pretty',
       options: {
         translateTime: 'h:MM:ss TT',
-        ignore: 'pid,reqId,hostname,req.hostname,req.remotePort,req.remoteAddress',
+        ignore:
+          'pid,reqId,hostname,req.hostname,req.remotePort,req.remoteAddress',
       },
     },
   },
@@ -17,8 +21,13 @@ fastify.get('/', function (_request, reply) {
   reply.send({ hello: 'world' });
 });
 
+console.log({ env: process.env.PORT });
+
+const port = Number(process.env.PORT) || 3000;
+const host = process.env.HOST_NAME || '0.0.0.0';
+
 // Run the server!
-fastify.listen({ port: 3000, host: '0.0.0.0' }, function (err, address) {
+fastify.listen({ port, host }, function (err, address) {
   if (err) {
     fastify.log.error(err);
     process.exit(1);
