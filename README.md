@@ -16,7 +16,7 @@ This project implements a web application for managing product categories and th
 
 **Prerequisites:**
 
-* Node.js (version >= 16.x) and npm
+* Node.js (version >= 20.x) and npm
 * MySQL database server
 
 1. Clone this repository.

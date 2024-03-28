@@ -1,0 +1,28 @@
+{
+  "name": "e-commerce-backend",
+  "version": "1.0.0",
+  "description": "An E-Commerce application that manages products and categories",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "nodemon --exec tsx ./index.ts",
+    "build": "tsc",
+    "migrate": "prisma migrate dev",
+    "seed:script": "prisma db seed",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Ahmed Hafez",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^4.26.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "nodemon": "^3.1.0",
+    "pino-pretty": "^11.0.0",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.3"
+  }
+}
