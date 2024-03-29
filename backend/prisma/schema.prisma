@@ -7,3 +7,29 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Category {
+  id Int @id @default(autoincrement())
+
+  name     String  @unique
+  picture  String?
+  parentId Int?
+
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryHierarchy")
+
+  products Product[]
+}
+
+model Product {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name       String  @unique
+  picture    String?
+  categoryId Int
+
+  // Relationships
+  category Category @relation(fields: [categoryId], references: [id])
+}

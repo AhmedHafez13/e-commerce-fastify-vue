@@ -9,8 +9,12 @@
     "dev": "nodemon --exec tsx ./index.ts",
     "build": "tsc",
     "migrate": "prisma migrate dev",
+    "seed": "prisma db seed prisma/seed.ts",
     "seed:script": "prisma db seed",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "prisma": {
+      "seed": "tsx"
   },
   "keywords": [],
   "author": "Ahmed Hafez",
