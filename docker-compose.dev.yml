@@ -1,0 +1,49 @@
+version: '3.9'
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+
+  backend-dev:
+    container_name: backend-dev
+    build:
+      context: ./backend
+      dockerfile: docker-dev.Dockerfile
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./backend:/app
+    tty: true
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: "mysql://root:${MYSQL_ROOT_PASSWORD}@mysql:${MYSQL_PORT}/${MYSQL_DATABASE}"
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+
+  frontend-dev:
+    container_name: frontend-dev
+    build:
+      context: ./frontend
+      dockerfile: docker-dev.Dockerfile
+    ports:
+      - '5173:5173'
+    volumes:
+      - ./frontend:/app
+    tty: true
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend-dev
+
+volumes:
+  mysql-data: {}
