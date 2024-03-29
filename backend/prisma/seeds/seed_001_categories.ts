@@ -192,7 +192,7 @@ async function insertHierarchy(
         };
 
     // Insert
-    let category: { id: number } | null = await prisma.category.findUnique({
+    let category: { id: number } | null = await prisma.category.findFirst({
       where: { name: data.name },
       select: { id: true },
     });
