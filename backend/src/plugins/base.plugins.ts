@@ -1,14 +1,12 @@
-import { AppPlugin } from '@app/types/app.types';
-import { FastifyInstance, FastifyPluginOptions } from 'fastify';
+import { APIPlugin } from '@app/types/app.types';
+import { FastifyInstance } from 'fastify';
 
-abstract class BaseAppPlugin implements AppPlugin {
-  constructor(
-    protected app: FastifyInstance,
-    protected options?: FastifyPluginOptions,
-    protected done?: (err?: Error | undefined) => void
-  ) {}
+abstract class BaseAppPlugin implements APIPlugin {
+  abstract basePath: string;
 
-  abstract handler(): Promise<void>;
+  constructor() {}
+
+  abstract handler(app: FastifyInstance): Promise<void>;
 }
 
 export default BaseAppPlugin;

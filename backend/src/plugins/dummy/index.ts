@@ -4,15 +4,16 @@ import DummyController from './dummy.controller';
 import BaseAppPlugin from '../base.plugins';
 
 class Dummy extends BaseAppPlugin {
+  override basePath: string = 'dummy';
   private dummyController;
 
-  constructor(protected override app: FastifyInstance) {
-    super(app);
+  constructor() {
+    super();
     this.dummyController = new DummyController();
   }
 
-  async handler(): Promise<void> {
-    this.app.register(async (app) => {
+  async handler(app: FastifyInstance): Promise<void> {
+    app.register(async (app) => {
       app.addHook('onRequest', new AuthHook(app).handler);
 
       app.get('/dummy-error', async (_request, reply) => {
@@ -21,11 +22,11 @@ class Dummy extends BaseAppPlugin {
       });
     });
 
-    this.app.get('/', async (_request, reply) => {
+    app.get('/', async (_request, reply) => {
       reply.send({ hello: 'world' });
     });
 
-    this.app.get('/dummy-handler', this.dummyController.dummyHandler);
+    app.get('/dummy-handler', this.dummyController.dummyHandler);
   }
 }
 

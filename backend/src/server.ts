@@ -1,5 +1,5 @@
 import fastify, { FastifyInstance } from 'fastify';
-import AppPlugins from './plugins/app.plugins';
+import APIPlugins from './plugins/app.plugins';
 
 /**
  * The main server class that manages Fastify application initialization, configuration, plugin registration, and startup.
@@ -26,7 +26,7 @@ export default class Server {
   public async start(port: number, host: string): Promise<void> {
     this.setupAppHooks();
     this.setupErrorHooks();
-    this.registerAppPlugins();
+    this.registerAPIPlugins();
 
     this.app.listen({ port, host }, (err, address) => {
       if (err) {
@@ -59,10 +59,16 @@ export default class Server {
   /**
    * Registers application plugins with the Fastify instance.
    */
-  private registerAppPlugins() {
-    for (const AppPlugin of AppPlugins) {
-      this.app.register(async (app, options, done) =>
-        new AppPlugin(app, options, done).handler()
+  private registerAPIPlugins() {
+    for (const APIPlugin of APIPlugins) {
+      const plugin = new APIPlugin();
+      this.app.register(
+        async (...args) => {
+          plugin.handler(...args);
+        },
+        {
+          prefix: plugin.basePath,
+        }
       );
     }
   }
