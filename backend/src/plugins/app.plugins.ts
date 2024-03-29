@@ -1,9 +1,9 @@
-import Dummy from './dummy';
 import { APIPlugin } from '@app/types/app.types';
+import CategoryPlugin from './category';
 
 // Register App Plugins
 const APIPlugins: (new () => APIPlugin)[] = [
-  Dummy,
+  CategoryPlugin,
   // REGISTER NEW MORE PLUGINS HERE!
 ];
 
