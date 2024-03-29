@@ -67,7 +67,7 @@ export default class Server {
           plugin.handler(...args);
         },
         {
-          prefix: plugin.basePath,
+          prefix: 'api/v1/' + plugin.basePath,
         }
       );
     }
