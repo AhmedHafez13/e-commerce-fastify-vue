@@ -1,5 +1,6 @@
 import fastify, { FastifyInstance } from 'fastify';
 import APIPlugins from './plugins/app.plugins';
+import prismaClient from './prisma-client';
 
 /**
  * The main server class that manages Fastify application initialization, configuration, plugin registration, and startup.
@@ -24,6 +25,11 @@ export default class Server {
    * @returns {Promise<void>} A Promise that resolves when the server is successfully listening.
    */
   public async start(port: number, host: string): Promise<void> {
+    await prismaClient.$connect().catch((err) => {
+      this.app.log.error(err);
+      process.exit(1);
+    });
+
     this.setupAppHooks();
     this.setupErrorHooks();
     this.registerAPIPlugins();
