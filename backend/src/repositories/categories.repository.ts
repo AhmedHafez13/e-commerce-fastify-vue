@@ -112,4 +112,18 @@ export default class CategoriesRepository {
 
     return count > 0;
   }
+
+  /**
+   * Checks if a category associated with products.
+   *
+   * @param id - The ID of the category to check
+   * @returns A Promise that resolves to `true` if the category associated with products, `false` otherwise
+   */
+  static async categoryHasProducts(id: number): Promise<boolean> {
+    const count = await prismaClient.product.count({
+      where: { categoryId: id },
+    });
+
+    return count > 0;
+  }
 }

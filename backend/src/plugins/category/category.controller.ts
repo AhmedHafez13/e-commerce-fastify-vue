@@ -137,6 +137,18 @@ export default class CategoryController {
       return reply.code(404).send({ error: 'Category not found' });
     }
 
+    // Check if the category has products
+    const hasProducts = await CategoriesRepository.categoryHasProducts(id);
+    if (hasProducts) {
+      // TODO: UNIFY THE ERROR RESPONSE SCHEMA
+      return reply
+        .code(422)
+        .send({
+          error:
+            'Unable to delete category. This category has associated products.',
+        });
+    }
+
     await CategoriesRepository.deleteCategory(id);
 
     reply.code(200).send({ message: 'Category successfully deleted' });
