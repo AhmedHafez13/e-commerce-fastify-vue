@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterLink, RouterView } from 'vue-router';
+import HelloWorld from './components/HelloWorld.vue';
 </script>
 
 <template>
@@ -9,6 +9,12 @@ import HelloWorld from './components/HelloWorld.vue'
 
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
+
+      <v-progress-circular
+        color="blue-lighten-3"
+        model-value="20"
+        indeterminate
+      ></v-progress-circular>
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
