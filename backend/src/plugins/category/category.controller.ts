@@ -23,7 +23,7 @@ export default class CategoryController {
       );
       if (!parentExists) {
         // TODO: UNIFY THE ERROR RESPONSE SCHEMA
-        return reply.code(404).send({ error: 'Parent category not found' });
+        return reply.code(404).send({ message: 'Parent category not found' });
       }
     }
 
@@ -50,11 +50,19 @@ export default class CategoryController {
     const id = Number(request.params.id);
     const { name, picture, parentId } = request.body;
 
+    // Check if the parentId is the same as the category itself
+    if (id === parentId) {
+      // TODO: UNIFY THE ERROR RESPONSE SCHEMA
+      return reply
+        .code(422)
+        .send({ message: 'A category cannot be its own child' });
+    }
+
     // Check if the category exists
     const categoryExists = await CategoriesRepository.categoryIdExists(id);
     if (!categoryExists) {
       // TODO: UNIFY THE ERROR RESPONSE SCHEMA
-      return reply.code(404).send({ error: 'Category not found' });
+      return reply.code(404).send({ message: 'Category not found' });
     }
 
     // Check if the parent category exists in categories table
@@ -64,7 +72,7 @@ export default class CategoryController {
       );
       if (!parentExists) {
         // TODO: UNIFY THE ERROR RESPONSE SCHEMA
-        return reply.code(404).send({ error: 'Parent category not found' });
+        return reply.code(404).send({ message: 'Parent category not found' });
       }
     }
 
@@ -75,7 +83,7 @@ export default class CategoryController {
     });
     if (!updatedCategory) {
       // TODO: UNIFY THE ERROR RESPONSE SCHEMA
-      return reply.code(404).send({ error: 'Category not found' });
+      return reply.code(404).send({ message: 'Category not found' });
     }
 
     reply.code(200).send({ data: updatedCategory });
@@ -92,6 +100,10 @@ export default class CategoryController {
     _request: FastifyRequest,
     reply: FastifyReply
   ): Promise<void> {
+    await new Promise((r) => setTimeout(r, 1000));
+    // return reply.code(200).send({ data: [] });
+    // return reply.code(404).send({ message: 'err err err err err err err err err' });
+
     const categories = await CategoriesRepository.getCategories();
     reply.code(200).send({ data: categories });
   }
@@ -111,7 +123,7 @@ export default class CategoryController {
 
     const category = await CategoriesRepository.getCategoryById(id);
     if (!category) {
-      return reply.code(404).send({ error: 'Category not found' });
+      return reply.code(404).send({ message: 'Category not found' });
     }
 
     reply.code(200).send({ data: category });
@@ -134,23 +146,29 @@ export default class CategoryController {
     const categoryExists = await CategoriesRepository.categoryIdExists(id);
     if (!categoryExists) {
       // TODO: UNIFY THE ERROR RESPONSE SCHEMA
-      return reply.code(404).send({ error: 'Category not found' });
+      return reply.code(404).send({ message: 'Category not found' });
     }
 
     // Check if the category has products
     const hasProducts = await CategoriesRepository.categoryHasProducts(id);
     if (hasProducts) {
       // TODO: UNIFY THE ERROR RESPONSE SCHEMA
-      return reply
-        .code(422)
-        .send({
-          error:
-            'Unable to delete category. This category has associated products.',
-        });
+      return reply.code(422).send({
+        error: "Can't delete category. Remove linked products first.",
+      });
+    }
+
+    // Check if the category has children
+    const hasChildren = await CategoriesRepository.categoryHasChildren(id);
+    if (hasChildren) {
+      // TODO: UNIFY THE ERROR RESPONSE SCHEMA
+      return reply.code(422).send({
+        error: "Can't delete category. Remove linked children first.",
+      });
     }
 
     await CategoriesRepository.deleteCategory(id);
 
-    reply.code(200).send({ message: 'Category successfully deleted' });
+    reply.code(200).send({ message: 'Category successfully deleted.' });
   }
 }
