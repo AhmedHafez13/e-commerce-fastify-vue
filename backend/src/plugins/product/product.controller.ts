@@ -23,7 +23,7 @@ export default class ProductController {
     );
     if (!categoryExists) {
       // TODO: UNIFY THE ERROR RESPONSE SCHEMA
-      return reply.code(404).send({ error: 'Category not found' });
+      return reply.code(404).send({ message: 'Category not found' });
     }
 
     const product = await ProductsRepository.createProduct({
@@ -53,7 +53,7 @@ export default class ProductController {
     const existingProduct = await ProductsRepository.productExists(id);
     if (!existingProduct) {
       // TODO: UNIFY THE ERROR RESPONSE SCHEMA
-      return reply.code(404).send({ error: 'Product not found' });
+      return reply.code(404).send({ message: 'Product not found' });
     }
 
     // Check if the categoryId exists in categories table
@@ -62,7 +62,7 @@ export default class ProductController {
     );
     if (!categoryExists) {
       // TODO: UNIFY THE ERROR RESPONSE SCHEMA
-      return reply.code(404).send({ error: 'Category not found' });
+      return reply.code(404).send({ message: 'Category not found' });
     }
 
     const product = await ProductsRepository.updateProduct(id, {
@@ -82,10 +82,15 @@ export default class ProductController {
    * @returns {Promise<void>}
    */
   async getProducts(
-    _request: FastifyRequest,
+    request: FastifyRequest<{ Querystring: { page: string; pageSize: string } }>,
     reply: FastifyReply
   ): Promise<void> {
-    const products = await ProductsRepository.getProducts();
+    await new Promise((r) => setTimeout(r, 1000));
+    const { page, pageSize } = request.query;
+    const pageN = Number(page) || 1;
+    const pageSizeN = Number(pageSize) || 20;
+
+    const products = await ProductsRepository.getProducts(pageN, pageSizeN);
 
     reply.code(200).send({ data: products });
   }
@@ -106,7 +111,7 @@ export default class ProductController {
     const product = await ProductsRepository.getProductById(id);
     if (!product) {
       // TODO: UNIFY THE ERROR RESPONSE SCHEMA
-      return reply.code(404).send({ error: 'Product not found' });
+      return reply.code(404).send({ message: 'Product not found' });
     }
 
     reply.code(200).send({ data: product });
@@ -129,7 +134,7 @@ export default class ProductController {
     const existingProduct = await ProductsRepository.productExists(id);
     if (!existingProduct) {
       // TODO: UNIFY THE ERROR RESPONSE SCHEMA
-      return reply.code(404).send({ error: 'Product not found' });
+      return reply.code(404).send({ message: 'Product not found' });
     }
 
     await ProductsRepository.deleteProduct(id);
