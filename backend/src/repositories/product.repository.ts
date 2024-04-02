@@ -7,9 +7,22 @@ export default class ProductsRepository {
    *
    * @returns A Promise that resolves to an array of Product objects
    */
-  static async getProducts(): Promise<Product[]> {
-    const products = await prismaClient.product.findMany();
-    return products;
+  static async getProducts(
+    page: number,
+    pageSize: number
+  ): Promise<{ products: Product[]; totalCount: number }> {
+    const skip = (page - 1) * pageSize;
+
+    const [products, totalCount] = await prismaClient.$transaction([
+      prismaClient.product.findMany({
+        include: { category: { select: { name: true } } },
+        take: pageSize,
+        skip,
+      }),
+      prismaClient.product.count(),
+    ]);
+
+    return { products, totalCount };
   }
 
   /**

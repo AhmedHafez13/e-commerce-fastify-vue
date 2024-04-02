@@ -9,7 +9,10 @@ export default class CategoriesRepository {
    */
   static async getCategories(): Promise<Category[]> {
     const categories = await prismaClient.category.findMany({
-      include: { children: true },
+      include: {
+        _count: { select: { products: true } },
+      },
+      orderBy: { name: 'asc' },
     });
     return categories;
   }
@@ -122,6 +125,20 @@ export default class CategoriesRepository {
   static async categoryHasProducts(id: number): Promise<boolean> {
     const count = await prismaClient.product.count({
       where: { categoryId: id },
+    });
+
+    return count > 0;
+  }
+
+  /**
+   * Checks if a category has children categories.
+   *
+   * @param id - The ID of the category to check
+   * @returns A Promise that resolves to `true` if the category has children, `false` otherwise
+   */
+  static async categoryHasChildren(id: number): Promise<boolean> {
+    const count = await prismaClient.category.count({
+      where: { parentId: id },
     });
 
     return count > 0;
