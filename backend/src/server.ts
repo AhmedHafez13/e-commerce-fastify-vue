@@ -1,4 +1,5 @@
 import fastify, { FastifyInstance } from 'fastify';
+import fastifyCors from '@fastify/cors';
 import APIPlugins from './plugins/app.plugins';
 import prismaClient from './prisma-client';
 
@@ -15,6 +16,10 @@ export default class Server {
    */
   constructor(options = {}) {
     this.app = fastify(options);
+
+    this.app.register(fastifyCors, {
+      origin: process.env.ALLOWED_ORIGINS?.split(','),
+    });
   }
 
   /**
