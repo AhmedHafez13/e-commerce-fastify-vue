@@ -1,7 +1,11 @@
 import { FastifyInstance } from 'fastify';
 import BaseAppPlugin from '../base.plugins';
 import ProductController from './product.controller';
-import { productDataSchema, singleIdParamSchema } from './product.schemas';
+import {
+  paginationSchema,
+  productDataSchema,
+  singleIdParamSchema,
+} from './product.schemas';
 
 export default class ProductPlugin extends BaseAppPlugin {
   override basePath: string = 'products';
@@ -13,7 +17,11 @@ export default class ProductPlugin extends BaseAppPlugin {
   }
 
   override async handler(app: FastifyInstance): Promise<void> {
-    app.get('/', this.productController.getProducts);
+    app.get(
+      '/',
+      { schema: paginationSchema },
+      this.productController.getProducts
+    );
 
     app.get(
       '/:id',
@@ -32,7 +40,7 @@ export default class ProductPlugin extends BaseAppPlugin {
       { schema: productDataSchema },
       this.productController.editProduct
     );
-    
+
     app.delete(
       '/:id',
       { schema: singleIdParamSchema },
