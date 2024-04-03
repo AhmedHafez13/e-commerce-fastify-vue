@@ -70,6 +70,11 @@ export default class Server {
   private setupAppHooks() {
     // TODO HANDLE AUTHENTICATION HOOK
     // this.app.addHook('onRequest', new AuthHook(this.app).handler);
+
+    // Simulate slower connection for all requests
+    this.app.addHook('onRequest', async () => {
+      await new Promise((r) => setTimeout(r, 1500));
+    });
   }
 
   /**
