@@ -1,27 +1,29 @@
-import Fastify from 'fastify';
+import { config } from 'dotenv';
+import Server from './src/server';
 
-const fastify = Fastify({
+// Load `.env` constants
+config();
+
+// Get port and host from `.env`
+const port = Number(process.env.PORT) || 3000;
+const host = process.env.HOST_NAME || '0.0.0.0';
+
+// Application global options
+const options = {
   logger: {
     transport: {
       target: 'pino-pretty',
       options: {
         translateTime: 'h:MM:ss TT',
-        ignore: 'pid,reqId,hostname,req.hostname,req.remotePort,req.remoteAddress',
+        ignore:
+          'pid,reqId,hostname,req.hostname,req.remotePort,req.remoteAddress',
       },
     },
   },
-});
+};
 
-// Declare a route
-fastify.get('/', function (_request, reply) {
-  reply.send({ hello: 'world' });
-});
-
-// Run the server!
-fastify.listen({ port: 3000, host: '0.0.0.0' }, function (err, address) {
-  if (err) {
-    fastify.log.error(err);
-    process.exit(1);
-  }
-  console.log(`Server is now listening on ${address}`);
+new Server(options).start(port, host).catch((error) => {
+  // TODO: APPLY A PROBER ERROR HANDLING
+  console.error({ error });
+  process.exit(1);
 });
