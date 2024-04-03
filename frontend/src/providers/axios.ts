@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { useOnline } from '@vueuse/core';
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL || 'http://localhost/'
+  baseURL: import.meta.env.VITE_BASE_URL || 'http://localhost'
 });
 
 const DEFAULT_MESSAGE =

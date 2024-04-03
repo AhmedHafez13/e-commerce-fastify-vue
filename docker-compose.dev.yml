@@ -21,6 +21,7 @@ services:
       - '3000:3000'
     volumes:
       - ./backend:/app
+      - ${STATIC_PATH}:/app/uploads
     tty: true
     environment:
       NODE_ENV: development

@@ -18,6 +18,7 @@ export default class ProductsRepository {
         include: { category: { select: { name: true } } },
         take: pageSize,
         skip,
+        orderBy: { id: 'desc' },
       }),
       prismaClient.product.count(),
     ]);

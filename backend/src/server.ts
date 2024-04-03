@@ -1,7 +1,10 @@
+import fs from 'fs';
 import fastify, { FastifyInstance } from 'fastify';
 import fastifyCors from '@fastify/cors';
 import APIPlugins from './plugins/app.plugins';
 import prismaClient from './prisma-client';
+import fastifyStatic from '@fastify/static';
+import appSetting from './settings/app.setting';
 
 /**
  * The main server class that manages Fastify application initialization, configuration, plugin registration, and startup.
@@ -35,6 +38,7 @@ export default class Server {
       process.exit(1);
     });
 
+    this.registerExternalPlugins();
     this.setupAppHooks();
     this.setupErrorHooks();
     this.registerAPIPlugins();
@@ -51,9 +55,26 @@ export default class Server {
   /**
    * Sets up custom hooks for the Fastify application (e.g., request/response lifecycle hooks, global error handling).
    */
+  private registerExternalPlugins() {
+    // Serve static files
+    fs.mkdirSync(appSetting.staticFilesPath, { recursive: true });
+    this.app.register(fastifyStatic, {
+      root: appSetting.staticFilesPath,
+      prefix: appSetting.staticFilesPrefix,
+    });
+  }
+
+  /**
+   * Sets up custom hooks for the Fastify application (e.g., request/response lifecycle hooks, global error handling).
+   */
   private setupAppHooks() {
     // TODO HANDLE AUTHENTICATION HOOK
     // this.app.addHook('onRequest', new AuthHook(this.app).handler);
+
+    // Simulate slower connection for all requests
+    this.app.addHook('onRequest', async () => {
+      await new Promise((r) => setTimeout(r, 1500));
+    });
   }
 
   /**

@@ -1,3 +1,12 @@
+const defaultImag = 'https://dummyimage.com/3200x3200/333/aaa';
+const baseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost';
+
+export const getImageSrc = (url?: string | null) => {
+  if (!url) return defaultImag;
+  if (url.startsWith('http')) return url;
+  return baseUrl + url;
+};
+
 export const getMimeType = (file: any, fallback?: string) => {
   const byteArray = new Uint8Array(file).subarray(0, 4);
   let header = '';
