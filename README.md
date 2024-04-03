@@ -97,6 +97,12 @@ npm run seed:script ./prisma/seeds/seed_002_products.ts
 
 Instructions for deploying the application to a production environment will be added soon.
 
+### Demo
+
+
+https://github.com/AhmedHafez13/e-commerce-fastify-vue/assets/53107590/81e2a9c0-a7e2-4f23-be7e-cf06688a26d7
+
+
 ### Contribution
 
 We welcome contributions to this project. Please refer to the CONTRIBUTING.md file (to be added) for guidelines on how to contribute.
