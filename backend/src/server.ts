@@ -1,7 +1,10 @@
+import fs from 'fs';
 import fastify, { FastifyInstance } from 'fastify';
 import fastifyCors from '@fastify/cors';
 import APIPlugins from './plugins/app.plugins';
 import prismaClient from './prisma-client';
+import fastifyStatic from '@fastify/static';
+import appSetting from './settings/app.setting';
 
 /**
  * The main server class that manages Fastify application initialization, configuration, plugin registration, and startup.
@@ -35,6 +38,7 @@ export default class Server {
       process.exit(1);
     });
 
+    this.registerExternalPlugins();
     this.setupAppHooks();
     this.setupErrorHooks();
     this.registerAPIPlugins();
@@ -45,6 +49,18 @@ export default class Server {
         process.exit(1);
       }
       console.log(`Server is now listening on ${address}`);
+    });
+  }
+
+  /**
+   * Sets up custom hooks for the Fastify application (e.g., request/response lifecycle hooks, global error handling).
+   */
+  private registerExternalPlugins() {
+    // Serve static files
+    fs.mkdirSync(appSetting.staticFilesPath, { recursive: true });
+    this.app.register(fastifyStatic, {
+      root: appSetting.staticFilesPath,
+      prefix: appSetting.staticFilesPrefix,
     });
   }
 
