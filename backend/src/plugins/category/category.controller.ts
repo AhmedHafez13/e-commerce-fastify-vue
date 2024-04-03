@@ -100,10 +100,6 @@ export default class CategoryController {
     _request: FastifyRequest,
     reply: FastifyReply
   ): Promise<void> {
-    await new Promise((r) => setTimeout(r, 1000));
-    // return reply.code(200).send({ data: [] });
-    // return reply.code(404).send({ message: 'err err err err err err err err err' });
-
     const categories = await CategoriesRepository.getCategories();
     reply.code(200).send({ data: categories });
   }

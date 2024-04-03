@@ -82,10 +82,11 @@ export default class ProductController {
    * @returns {Promise<void>}
    */
   async getProducts(
-    request: FastifyRequest<{ Querystring: { page: string; pageSize: string } }>,
+    request: FastifyRequest<{
+      Querystring: { page: string; pageSize: string };
+    }>,
     reply: FastifyReply
   ): Promise<void> {
-    await new Promise((r) => setTimeout(r, 1000));
     const { page, pageSize } = request.query;
     const pageN = Number(page) || 1;
     const pageSizeN = Number(pageSize) || 20;
