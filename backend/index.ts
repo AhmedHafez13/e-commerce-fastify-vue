@@ -1,8 +1,13 @@
 import { config } from 'dotenv';
 import Server from './src/server';
+import writeDotEnv from './scripts/write-dotenv';
 
 // Load `.env` constants
 config();
+
+// Write `.env` file for backend
+// Prisma expects to find the database connection string in this file
+writeDotEnv();
 
 // Get port and host from `.env`
 const port = Number(process.env.PORT) || 3000;
