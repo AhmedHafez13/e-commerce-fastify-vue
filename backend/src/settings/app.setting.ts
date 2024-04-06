@@ -1,5 +1,5 @@
 const staticFilesPrefix = '/public';
-const uploadsPath = '/app/uploads';
+const uploadsPath = process.env.PUBLIC_PATH || '/app/public';
 
 export default {
   staticFilesPath: uploadsPath,

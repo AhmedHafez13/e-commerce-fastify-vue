@@ -40,7 +40,9 @@ export default class ImageUtils {
     try {
       fs.rmSync(filePath);
       return true;
-    } catch (error) {}
+    } catch (error) {
+      // TODO: APPLY PROPER ERROR HANDLING
+    }
     return false;
   }
 }

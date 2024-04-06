@@ -12,39 +12,38 @@ services:
     ports:
       - '3306:3306'
 
-  backend-dev:
-    container_name: backend-dev
+  backend:
+    container_name: backend
     build:
       context: ./backend
-      dockerfile: docker-dev.Dockerfile
+      dockerfile: docker-prod.Dockerfile
     ports:
       - '3000:3000'
     volumes:
-      - ./backend:/app
       - ${HOST_PUBLIC_PATH}:${PUBLIC_PATH}
     tty: true
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       DATABASE_URL: "mysql://root:${MYSQL_ROOT_PASSWORD}@mysql:${MYSQL_PORT}/${MYSQL_DATABASE}"
     env_file:
       - .env
     depends_on:
       - mysql
 
-  frontend-dev:
-    container_name: frontend-dev
+  nginx:
+    container_name: nginx
     build:
       context: ./frontend
-      dockerfile: docker-dev.Dockerfile
+      dockerfile: docker-prod.Dockerfile
     ports:
-      - '5173:5173'
+      - '80:80'
     volumes:
-      - ./frontend:/app
+      - ${HOST_PUBLIC_PATH}:${PUBLIC_PATH}
     tty: true
     env_file:
-      - ./frontend/.env
+      - .env
     depends_on:
-      - backend-dev
+      - backend
 
 volumes:
   mysql-data: {}

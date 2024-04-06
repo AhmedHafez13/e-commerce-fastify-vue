@@ -1,4 +1,4 @@
-import CategoriesRepository from '@app/repositories/categories.repository';
+import CategoriesRepository from '../../repositories/categories.repository';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { CategoryData } from './category.types';
 

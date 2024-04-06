@@ -1,4 +1,4 @@
-import { APIPlugin } from '@app/types/app.types';
+import { APIPlugin } from '../types/app.types';
 import CategoryPlugin from './category';
 import ProductPlugin from './product';
 import ImageUpload from './image-center';

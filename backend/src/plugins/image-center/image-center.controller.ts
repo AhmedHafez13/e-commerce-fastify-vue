@@ -3,8 +3,8 @@ import path from 'path';
 import util from 'util';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { pipeline } from 'stream';
-import appSetting from '@app/settings/app.setting';
-import ImageUtils from '@app/utils/image.utils';
+import appSetting from '../../settings/app.setting';
+import ImageUtils from '../../utils/image.utils';
 
 const pump = util.promisify(pipeline);
 
