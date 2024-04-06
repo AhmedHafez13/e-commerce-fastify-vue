@@ -97,7 +97,7 @@ async function getCategoriesDictionary(): Promise<{ [key: string]: number }> {
 async function main() {
   const categoriesDict = await getCategoriesDictionary();
 
-  let data: any = [];
+  const data: { name: string; picture: string; categoryId: number }[] = [];
 
   products.forEach((product) => {
     const categoryId = categoriesDict[product.category];

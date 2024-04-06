@@ -1,4 +1,4 @@
-import { APIPlugin } from '@app/types/app.types';
+import { APIPlugin } from '../types/app.types';
 import { FastifyInstance } from 'fastify';
 
 abstract class BaseAppPlugin implements APIPlugin {

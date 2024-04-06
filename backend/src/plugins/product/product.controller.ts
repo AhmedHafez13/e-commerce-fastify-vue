@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import ProductsRepository from '@app/repositories/product.repository';
-import CategoriesRepository from '@app/repositories/categories.repository';
+import ProductsRepository from '../../repositories/product.repository';
+import CategoriesRepository from '../../repositories/categories.repository';
 import { ProductData } from './product.types';
 
 export default class ProductController {

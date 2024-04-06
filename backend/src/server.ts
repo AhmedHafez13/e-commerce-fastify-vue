@@ -33,11 +33,7 @@ export default class Server {
    * @returns {Promise<void>} A Promise that resolves when the server is successfully listening.
    */
   public async start(port: number, host: string): Promise<void> {
-    await prismaClient.$connect().catch((err) => {
-      this.app.log.error(err);
-      process.exit(1);
-    });
-
+    await this.checkDatabaseConnection();
     this.registerExternalPlugins();
     this.setupAppHooks();
     this.setupErrorHooks();
@@ -50,6 +46,20 @@ export default class Server {
       }
       console.log(`Server is now listening on ${address}`);
     });
+  }
+
+  private async checkDatabaseConnection() {
+    const attempts = 3;
+    for (let i = 0; i < attempts; i++) {
+      try {
+        await prismaClient.$connect();
+        return;
+      } catch (err) {
+        this.app.log.error(err);
+      }
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+    process.exit(1);
   }
 
   /**
