@@ -7,5 +7,5 @@ export default {
   internalImagesPath: `${uploadsPath}/images`,
   tempImagesPath: `${uploadsPath}/temp/images`,
   publicImagesPath: `${staticFilesPrefix}/images`,
-  allowedImageExts: ['png', 'jpeg', 'jpg'],
+  allowedImageExts: ['png', 'jpeg', 'jpg', 'webp'],
 };

@@ -9,7 +9,8 @@ export interface Category {
   parentId?: number;
   children?: Category[];
   productsCount?: number;
-  _count?: { products: number };
+  count?: number;
+  recursiveCount?: number;
   title?: string;
 }
 

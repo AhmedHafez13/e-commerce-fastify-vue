@@ -339,18 +339,17 @@ const validationRules = computed(() => ({
         <!-- Image Upload -->
         <v-sheet class="v-col-sm-12 v-col-md-6" rounded>
           <div style="max-width: 400px">
-            <div class="d-flex justify-space-between">
-              <p class="mb-2">Image</p>
+            <div class="d-flex justify-space-between align-center" style="min-height: 40px">
+              <p>Image</p>
               <v-tooltip text="The Image will be resized to (3200×3200)px">
                 <template v-slot:activator="{ props }">
                   <v-icon v-bind="props" icon="mdi-help" size="small"></v-icon>
                 </template>
               </v-tooltip>
               <v-spacer></v-spacer>
-              <v-tooltip text="Remove" location="top">
+              <v-tooltip v-if="image.src" text="Remove" location="top">
                 <template v-slot:activator="{ props }">
                   <v-btn
-                    v-if="image.src"
                     :disabled="isLoading"
                     v-bind="props"
                     class="mx-1"
@@ -442,7 +441,6 @@ $hover-color: #eeeeee64;
   height: 400px;
   border: $border-width solid $border-color;
   border-radius: 1rem;
-  cursor: grab;
 
   display: flex;
   justify-content: center;
