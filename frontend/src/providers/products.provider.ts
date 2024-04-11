@@ -4,7 +4,7 @@ const BASE_PATH = '/api/v1';
 
 export default class ProductsProvider {
   static getAllCategories() {
-    return axios.get(BASE_PATH + '/categories');
+    return axios.get(BASE_PATH + '/categories/tree');
   }
 
   static CreateCategory(category: { name: string; parentId?: number | null; image?: string }) {

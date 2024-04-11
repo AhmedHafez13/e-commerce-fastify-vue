@@ -104,6 +104,14 @@ export default class CategoryController {
     reply.code(200).send({ data: categories });
   }
 
+  async getCategoriesTree(
+    _request: FastifyRequest,
+    reply: FastifyReply
+  ): Promise<void> {
+    const categories = await CategoriesRepository.getCategoriesTree();
+    reply.code(200).send({ data: categories });
+  }
+
   /**
    * Retrieves a specific category by its ID from the database.
    *

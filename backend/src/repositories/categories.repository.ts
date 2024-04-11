@@ -1,5 +1,6 @@
 import { Category } from '@prisma/client';
 import prismaClient from '../prisma-client';
+import { CategoryItem } from '../plugins/category/category.types';
 
 export default class CategoriesRepository {
   /**
@@ -142,5 +143,53 @@ export default class CategoriesRepository {
     });
 
     return count > 0;
+  }
+
+  static async getCategoriesTree() {
+    let result: CategoryItem[] = await prismaClient.$queryRaw`
+      WITH RECURSIVE Categories AS (
+        SELECT id, name, 0 AS level, CAST(id as CHAR(255)) AS path
+        FROM Category
+        WHERE parentId IS NULL
+        
+        UNION ALL
+        
+        SELECT ct.id, ct.name, level + 1, CONCAT(path, '.', ct.id)
+        FROM Category ct
+        INNER JOIN Categories cts ON ct.parentId = cts.id
+      )
+
+      SELECT ct.id, ct.name, ct.picture, ct.parentId, COUNT(pr.categoryId) AS count, cts.path
+      FROM Product pr
+      RIGHT JOIN Category ct ON pr.categoryId = ct.id
+
+      LEFT JOIN Categories cts ON cts.id = ct.id
+
+      GROUP BY ct.id, ct.name, cts.path;
+    `;
+
+    // Create categories map { id: categoryItem }
+    const categoryMap: { [key: string]: CategoryItem } = result.reduce(
+      (acc: { [key: string]: CategoryItem }, category: CategoryItem) => {
+        acc[category.id] = {
+          ...category,
+          count: Number(category.count),
+          recursiveCount: 0,
+        };
+        return acc;
+      },
+      {}
+    );
+
+    for (const category of Object.values(categoryMap)) {
+      if (category.path) {
+        const pathIds = category.path.split('.');
+        pathIds.forEach((id) => {
+          categoryMap[id].recursiveCount += Number(category.count);
+        });
+      }
+    }
+
+    return Object.values(categoryMap);
   }
 }

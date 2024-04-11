@@ -206,7 +206,7 @@ const onCategoryDeleted = (data: Category) => {
         <template v-slot:title="{ item }">
           <v-hover v-slot="{ isHovering, props }">
             <div v-bind="props">
-              {{ item.name }}
+              {{ `(${item.recursiveCount}) ${item.name}` }}
               <v-btn
                 v-if="categoryToEdit?.id !== item.id"
                 :class="{ 'd-inline': isHovering }"

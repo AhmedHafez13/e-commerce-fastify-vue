@@ -14,6 +14,8 @@ export default class CategoryPlugin extends BaseAppPlugin {
 
   override async handler(app: FastifyInstance): Promise<void> {
     app.get('/', this.categoryController.getCategories);
+    
+    app.get('/tree', this.categoryController.getCategoriesTree);
 
     app.get(
       '/:id',
