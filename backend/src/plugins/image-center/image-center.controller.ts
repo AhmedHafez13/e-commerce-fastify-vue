@@ -23,8 +23,7 @@ export default class ImageCenterController {
     const parts = request.files();
     const randomName = Math.random().toString(36).substring(2, 9);
     const filename = `${Date.now()}-${randomName}`;
-    const tampPath = path.join(appSetting.tempImagesPath, filename);
-    let fileExt = '';
+    const tempFilePath = path.join(appSetting.tempImagesPath, filename);
     let hasFiles = false;
 
     // Create output directories
@@ -36,42 +35,41 @@ export default class ImageCenterController {
 
       // Check mimetype
       const ext = part.mimetype.split('image/').pop();
-      if (!ext || !appSetting.allowedImageExts.includes(ext)) {
+      if (!ext || !appSetting.allowedImageExts.includes(ext.toLowerCase())) {
         const allowed = appSetting.allowedImageExts.join(', ');
         return reply
           .code(422)
           .send({ message: `Image type not allowed. Allowed: ${allowed}` });
       }
-      fileExt = ext || 'jpg';
 
-      await pump(part.file, fs.createWriteStream(`${tampPath}.${ext}`));
+      await pump(part.file, fs.createWriteStream(tempFilePath));
     }
 
     if (!hasFiles) {
       return reply.code(400).send({ message: 'Image is required' });
     }
 
-    const imagePath = path.join(appSetting.internalImagesPath, filename);
-    const publicPath = path.join(appSetting.publicImagesPath, filename);
-
     // Resize image
-    const result = await ImageUtils.resizeImage(
-      `${tampPath}.${fileExt}`,
-      `${imagePath}.${fileExt}`
+    const outputFilename = await ImageUtils.resizeImage(
+      tempFilePath,
+      appSetting.internalImagesPath,
+      filename
     );
 
     // Clean up
     try {
-      ImageUtils.deleteFile(`${tampPath}.${fileExt}`);
+      ImageUtils.deleteFile(tempFilePath);
     } catch (error) {
       // TODO: APPLY PROPER ERROR HANDLING
       console.error(error);
     }
 
-    if (!result) {
+    if (!outputFilename) {
       return reply.code(422).send({ message: 'Error while processing image' });
     }
 
-    reply.code(201).send({ data: `${publicPath}.${fileExt}` });
+    reply
+      .code(201)
+      .send({ data: path.join(appSetting.publicImagesPath, outputFilename) });
   }
 }
