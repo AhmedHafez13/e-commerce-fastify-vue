@@ -3,7 +3,7 @@
 <template>
   <v-container fluid fill-height class="home glow">
     <v-layout wrap>
-      <v-flex xs12 md6 class="text-container">
+      <v-sheet class="text-container" rounded>
         <v-card-text class="text-h1 glow-text">Welcome to<br />My Shop</v-card-text>
         <v-card-text class="glow-text">
           Shop with confidence at Me Shop. Satisfaction guaranteed!
@@ -11,22 +11,20 @@
         <v-btn class="ma-6 hover:shadow glow-btn" color="primary" size="large" to="/products">
           Explore Products <v-icon right>mdi-chevron-right</v-icon>
         </v-btn>
-      </v-flex>
-      <v-flex xs12 md6 class="image-container glow-image">
-        <v-img src="your_image.jpg" alt="Shop Image" />
-      </v-flex>
+      </v-sheet>
     </v-layout>
   </v-container>
 </template>
 
 <style scoped lang="scss">
 .home {
-  min-height: 100vh;
+  min-width: 530px;
   display: flex;
   flex-wrap: wrap;
 }
 
 .text-container {
+  width: 100%;
   padding: 24px;
 }
 
